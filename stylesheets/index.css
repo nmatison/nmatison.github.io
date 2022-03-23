@@ -1,0 +1,94 @@
+.outer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    font-family: "Montserrat", sans-serif;
+  }
+  
+  .maps-svg-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3em;
+  }
+  
+  .maps-info {
+    display: flex;
+    flex-direction: column;
+    background-color: #1b1f22;
+    opacity: 0.9;
+    margin-right: 2em;
+    border-radius: 5px;
+    align-self: center;
+
+  }
+  
+  .maps {
+    margin-left: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .maps-info h1{
+    color: #d968d6;
+  }
+  
+  .maps-info p {
+    color: #ffe030
+  }
+  
+  .maps-image {
+    width: 50%;
+    height: 50%;
+    align-self: center;
+    margin-top: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .container {
+    background-color: #1b1f22;
+    opacity: 0.9;
+    border-radius: 5px;
+  }
+  
+  svg {
+    border-radius: 5px;
+  }
+  
+  .song-text {
+    pointer-events: none !important;
+  }
+  
+  .artist-text {
+    pointer-events: none !important;
+  }
+  
+  .parent-text {
+    pointer-events: none !important;
+  }
+  
+  .information {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .title {
+    color: blue;
+    font-size: 64px;
+    font-weight: bold;
+    opacity: 0.7;
+    margin-bottom: 20px;
+  }
+  
+  .links-pic {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 15px;
+    margin-top: 20px;
+  }
+  
+  .links-pic a {
+  }
+  
+  .github {
+  }
