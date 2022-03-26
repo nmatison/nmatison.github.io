@@ -16,8 +16,9 @@ const rearrangeCSVDataForD3Hierarchy = (csvData) => {
 
   const dataRearrangedByI4gRating = csvData.reduce((acc, row) => {
     const i4gDifficulty = row["i4g_difficulty"];
+    const slicedMapName = row["map"].slice(7)
       if (acc[i4gDifficulty]) {
-        acc[i4gDifficulty].push({...row, "name": row["map"]});
+        acc[i4gDifficulty].push({...row, name: slicedMapName, map: slicedMapName});
       } else {
         acc[i4gDifficulty] = []
       }
@@ -126,16 +127,16 @@ d3.csv("/data/caps_hard_copy.csv", function(error, csvData) {
 
    let div = document.querySelector(".maps");
     div.innerHTML = "";
-    div.innerHTML += "<h1>Map Title:</h1>";
+    div.innerHTML += "<h1>Map:</h1>";
     div.innerHTML += `<p>${capData.map}</p>`;
     div.innerHTML += `<br>`;
-    div.innerHTML += "<h1>Author</h1>";
+    div.innerHTML += "<h1>Author:</h1>";
     div.innerHTML += `<p>${capData.map_author}</p>`;
     div.innerHTML += `<br>`;
     div.innerHTML += "<h1>I4G Difficulty:</h1>";
     div.innerHTML += `<p>${capData.i4g_difficulty}</p>`;
     div.innerHTML += `<br>`;
-    div.innerHTML += "<h1>Twitch Chat Rating</h1>";
+    div.innerHTML += "<h1>Twitch Chat Rating:</h1>";
     div.innerHTML += `<p>${capData.twitch_rating}</p>`;
     div.innerHTML += `<br>`;
     div.innerHTML += "<h1>Date Capped:</h1>";
