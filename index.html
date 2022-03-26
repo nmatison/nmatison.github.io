@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    <link rel="shortcut icon" type="image/x-icon" href="./images/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
     <link rel="stylesheet" type="text/css" href="./stylesheets/reset.css"></link>
     <link rel="stylesheet" type="text/css" href="./stylesheets/index.css"></link>
+    <link rel="stylesheet" type="text/css" href="./stylesheets/node.css"></link>
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     <meta charset="utf-8">
     <title>soupyEU Cap All Stats</title>
@@ -11,12 +12,12 @@
   <body>
     <div class="outer">
       <div class="information">
-        <h1 class="title">soupyEU Cap All Stats</h1>
+        <h1 class="title">soupyEU Cap All Challenge Stats</h1>
         <p class="description">Just a cool visualization of the data of the maps capped so far on the stream!</p>
       </div>
       <div class="maps-svg-container">
         <div class="maps-info">
-          <img class="maps-image" src="./images/github.jpg" alt="default-logo">
+          <img class="maps-image" src="./images/btlogo.bmp" alt="default-logo">
           <div class="maps">
             <h1>Map Title:</h1>
             <p>Select A map For More Info</p>
@@ -34,21 +35,26 @@
             <p>Select A map For More Info</p>
           </div>
         </div>
-          <div class="container">
-          </div>
+        <svg></svg>
       </div>
-      <div class="links-pic">
-        <p class="links"> All information regarding shown above is from:
+      <div class="sources">
+        <p class="ut-bt-discord"> Come join us at the
+            <a
+            href="http://utbt.net"
+            target="_blank">
+            UT BT Community Discord</a>!</p>
+        <p class="links"> All mapped capped information and stream related information from:
           <a
           href="http://soupy.utbt.net/caps.html"
           target="_blank">
             Stats provided by Soupy</a>.</p>
-        <a href="https://github.com/nmatison/datafy" target="_blank">
+        <a href="https://github.com/nmatison/nmatison.github.io" target="_blank">
           <img class="github" src="./images/github.jpg"
           alt="https://github.com/nmatison/nmatison.github.io"/>
         </a>
       </div>
     </div>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="./javascripts/chart.js"></script>
   </body>
 </html>
