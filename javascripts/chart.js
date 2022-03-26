@@ -100,12 +100,15 @@ d3.csv("/data/caps_hard_copy.csv", function(error, csvData) {
         .style("fill-opacity", function(d) { return d.parent === focus ? 1 : 0; })
         .on("start", function(d) { if (d.parent === focus) this.style.display = "inline"; })
         .on("end", function(d) { if (d.parent !== focus) this.style.display = "none"; });
-    console.log(d)
+
     if (d !== root) {
       var nodeLeaf = svg.selectAll(".leaf")
       .on("mouseover", function(d) {
         updateStats(d.data)
       });
+    } else {
+      var nodeLeaf = svg.selectAll(".leaf")
+      .on("mouseover", null);
     }
   }
 
