@@ -80,7 +80,7 @@ const rearrangeCSVDataForD3Hierarchy = (csvData) => {
   }
 
   const dataForD3Hierarchy = {
-    name: "flare",
+    name: "Cap All Data",
     children
   };
 
@@ -181,7 +181,8 @@ d3.csv("/data/caps_hard_copy.csv", function(error, csvData) {
       const i4gRatingCollectionStats = {
         total_twitch_ratings: 0,
         average_twitch_rating: 0,
-        total_maps_capped: 0
+        total_maps_capped: 0,
+        parent_name: collectionData.name
       }
 
       i4g_rating_circle.children.forEach(map_group_circle => {
@@ -189,7 +190,8 @@ d3.csv("/data/caps_hard_copy.csv", function(error, csvData) {
         const mapGroupCollectionStats = {
           total_twitch_ratings: 0,
           average_twitch_rating: 0,
-          total_maps_capped: 0
+          total_maps_capped: 0,
+          parent_name: i4g_rating_circle.name
         }
 
         map_group_circle.children.forEach(map_circle => {
@@ -214,8 +216,11 @@ d3.csv("/data/caps_hard_copy.csv", function(error, csvData) {
     
     let div = document.querySelector(".maps");
     div.innerHTML = "";
-    div.innerHTML += "<h1>Collection:</h1>";
+    div.innerHTML += "<h1>Collection Set:</h1>";
     div.innerHTML += `<p>${collectionData.name}</p>`;
+    div.innerHTML += `<br>`;
+    div.innerHTML += "<h1>Parent Collection Set:</h1>";
+    div.innerHTML += `<p>${collectionData.collectionStats.parent_name}</p>`;
     div.innerHTML += `<br>`;
     div.innerHTML += "<h1>Amount Of Maps Capped</h1>";
     div.innerHTML += `<p>${collectionData.collectionStats.total_maps_capped}</p>`;
