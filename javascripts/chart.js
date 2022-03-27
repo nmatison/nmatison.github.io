@@ -1,3 +1,5 @@
+const BOTTOM_OF_TREE_DEPTH = 2
+
 var svg = d3.select("svg"),
     margin = 20,
     diameter = 960,
@@ -92,12 +94,14 @@ d3.csv("/data/caps_hard_copy.csv", function(error, csvData) {
   data = rearrangeCSVDataForD3Hierarchy(csvData)
 
   root = d3.hierarchy(data)
-      .sum(function(d) { return d.twitch_rating; })
+      .sum(function(d) { return d.twitch_rating})
       .sort(function(a, b) { return b.value - a.value; });
 
   var focus = root,
       nodes = pack(root).descendants(),
       view;
+
+  populateCollectionStats(root.data)
 
   var circle = g.selectAll("circle")
     .data(nodes)
@@ -106,17 +110,22 @@ d3.csv("/data/caps_hard_copy.csv", function(error, csvData) {
       .style("fill", function(d) { return d.children ? color(d.depth) : null; })
       .on("click", function(d) { if (focus !== d) zoom(d), d3.event.stopPropagation(); })
 
-      var nodeLeaf = svg.selectAll(".leaf")
-      .on("mouseover", null)
-      .on("click", null)
+    svg.selectAll(".leaf")
+    .on("mouseover", null)
+    .on("click", null)
+
+    svg.selectAll('.node')
+      .on("mouseover", function(d) {
+        updateStatsForCollection(d.data)
+      });
     
-  var text = g.selectAll("text")
+    g.selectAll("text")
     .data(nodes)
     .enter().append("text")
-      .attr("class", "label")
-      .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
-      .style("display", function(d) { return d.parent === root ? "inline" : "none"; })
-      .text(function(d) { return d.data.name; });
+    .attr("class", "label")
+    .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
+    .style("display", function(d) { return d.parent === root ? "inline" : "none"; })
+    .text(function(d) { return d.data.name; });
 
   var node = g.selectAll("circle,text");
 
@@ -142,14 +151,21 @@ d3.csv("/data/caps_hard_copy.csv", function(error, csvData) {
         .on("start", function(d) { if (d.parent === focus) this.style.display = "inline"; })
         .on("end", function(d) { if (d.parent !== focus) this.style.display = "none"; });
 
-    if (d !== root) {
-      var nodeLeaf = svg.selectAll(".leaf")
+    
+    if (d.depth === BOTTOM_OF_TREE_DEPTH) {
+      svg.selectAll(".leaf")
       .on("mouseover", function(d) {
-        updateStats(d.data)
+        updateStatsForMap(d.data)
       });
-    } else {
-      var nodeLeaf = svg.selectAll(".leaf")
+      svg.selectAll('.node')
       .on("mouseover", null);
+    } else {
+      svg.selectAll(".leaf")
+      .on("mouseover", null);
+      svg.selectAll('.node')
+      .on("mouseover", function(d) {
+        updateStatsForCollection(d.data)
+      });
     }
   }
 
@@ -159,13 +175,58 @@ d3.csv("/data/caps_hard_copy.csv", function(error, csvData) {
     circle.attr("r", function(d) { return d.r * k; });
   }
 
-  function updateStats(capData) {
-    let wholeDiv = document.querySelector(".maps-info");
-    wholeDiv.innerHTML = "";
-    wholeDiv.innerHTML += `<img class="maps-image" src="./images/btlogo.bmp" alt="default-logo">`;
-    wholeDiv.innerHTML += `<div class="maps"></div>`;
+  function populateCollectionStats(collectionData) {
 
-   let div = document.querySelector(".maps");
+    collectionData.children.forEach(i4g_rating_circle => {
+      const i4gRatingCollectionStats = {
+        total_twitch_ratings: 0,
+        average_twitch_rating: 0,
+        total_maps_capped: 0
+      }
+
+      i4g_rating_circle.children.forEach(map_group_circle => {
+
+        const mapGroupCollectionStats = {
+          total_twitch_ratings: 0,
+          average_twitch_rating: 0,
+          total_maps_capped: 0
+        }
+
+        map_group_circle.children.forEach(map_circle => {
+          mapGroupCollectionStats.total_twitch_ratings += parseFloat(map_circle.twitch_rating);
+          mapGroupCollectionStats.total_maps_capped += 1;
+        })
+
+        mapGroupCollectionStats.average_twitch_rating = (mapGroupCollectionStats.total_twitch_ratings / mapGroupCollectionStats.total_maps_capped).toFixed(2);
+        map_group_circle.collectionStats = mapGroupCollectionStats;
+
+        i4gRatingCollectionStats.total_twitch_ratings += mapGroupCollectionStats.total_twitch_ratings;
+        i4gRatingCollectionStats.total_maps_capped += mapGroupCollectionStats.total_maps_capped;
+      })
+
+      i4gRatingCollectionStats.average_twitch_rating = (i4gRatingCollectionStats.total_twitch_ratings / i4gRatingCollectionStats.total_maps_capped).toFixed(2);
+      i4g_rating_circle.collectionStats = i4gRatingCollectionStats;
+    });
+  }
+
+  function updateStatsForCollection(collectionData) {
+    clearStatsDiv()
+    
+    let div = document.querySelector(".maps");
+    div.innerHTML = "";
+    div.innerHTML += "<h1>Collection:</h1>";
+    div.innerHTML += `<p>${collectionData.name}</p>`;
+    div.innerHTML += `<br>`;
+    div.innerHTML += "<h1>Amount Of Maps Capped</h1>";
+    div.innerHTML += `<p>${collectionData.collectionStats.total_maps_capped}</p>`;
+    div.innerHTML += `<br>`;
+    div.innerHTML += "<h1>Average Twitch Rating</h1>";
+    div.innerHTML += `<p>${collectionData.collectionStats.average_twitch_rating}</p>`;
+  }
+
+  function updateStatsForMap(capData) {
+    clearStatsDiv()
+    let div = document.querySelector(".maps");
     div.innerHTML = "";
     div.innerHTML += "<h1>Map:</h1>";
     div.innerHTML += `<p>${capData.map}</p>`;
@@ -181,5 +242,18 @@ d3.csv("/data/caps_hard_copy.csv", function(error, csvData) {
     div.innerHTML += `<br>`;
     div.innerHTML += "<h1>Date Capped:</h1>";
     div.innerHTML += `<p>${capData.time_capped}</p>`;
+    div.innerHTML += `<br>`;
+    div.innerHTML += "<h1>Cap Number:</h1>";
+    div.innerHTML += `<p>${capData.cap_number}</p>`;
+    div.innerHTML += `<br>`;
+    div.innerHTML += "<h1>Time Taken To Cap:</h1>";
+    div.innerHTML += `<p>${capData.time_played}</p>`;
+  }
+
+  function clearStatsDiv() {
+    let wholeDiv = document.querySelector(".maps-info");
+    wholeDiv.innerHTML = "";
+    wholeDiv.innerHTML += `<img class="maps-image" src="./images/btlogo.bmp" alt="default-logo">`;
+    wholeDiv.innerHTML += `<div class="maps"></div>`;
   }
 });

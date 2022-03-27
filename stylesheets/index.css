@@ -7,6 +7,22 @@
     width: 100%;
     height: 100%;
   }
+
+.information {
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    justify-content: space-between;
+  }
+
+  .title {
+    color: blue;
+    font-size: 64px;
+    font-weight: bold;
+    opacity: 0.7;
+    margin-bottom: 20px;
+  }
+
   
   .maps-svg-container {
     display: flex;
@@ -37,12 +53,12 @@
   }
   
   .maps-info p {
-    color: #ffe030
+    color: #ece6ff
   }
   
   .maps-image {
-    width: 200px;
-    height: 200px;
+    width: 110px;
+    height: 110px;
     align-self: center;
     margin-top: 15px;
     margin-bottom: 15px;
@@ -54,45 +70,16 @@
     height: 960px;
     width: 960px;
   }
-  
-  
-  .song-text {
-    pointer-events: none !important;
-  }
-  
-  .artist-text {
-    pointer-events: none !important;
-  }
-  
-  .parent-text {
-    pointer-events: none !important;
-  }
-  
-  .information {
-    display: flex;
-    width: 925px;
-    margin-top: 50px;
-    justify-content: space-between;
-  }
 
-  .title {
-    color: blue;
-    font-size: 64px;
-    font-weight: bold;
-    opacity: 0.7;
-    margin-bottom: 20px;
+  footer {
+    display: flex;
   }
   
   .sources {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: space-between;
     margin-right: 15px;
     margin-top: 20px;
-  }
-  
-  .sources a {
-  }
-  
-  .github {
   }
