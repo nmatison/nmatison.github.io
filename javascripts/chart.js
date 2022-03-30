@@ -1,146 +1,194 @@
-const BOTTOM_OF_TREE_DEPTH = 2
+const BOTTOM_OF_TREE_DEPTH = 2;
 
 var svg = d3.select("svg"),
-    margin = 20,
-    diameter = 960,
-    g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+  margin = 20,
+  diameter = 960,
+  g = svg
+    .append("g")
+    .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
 
-var color = d3.scaleLinear()
-    .domain([-1, 5])
-    .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
-    .interpolate(d3.interpolateHcl);
+var color = d3
+  .scaleLinear()
+  .domain([-1, 5])
+  .range(["hsl(152,80%,80%)", "hsl(228,30%,40%)"])
+  .interpolate(d3.interpolateHcl);
 
-var pack = d3.pack()
-    .size([diameter - margin, diameter - margin])
-    .padding(2);
+var pack = d3
+  .pack()
+  .size([diameter - margin, diameter - margin])
+  .padding(2);
 
 // TODO - Fetch the data from supa's server directly instead of a hardcoded file on my end if/when I feel like spinning up a backend server.
-d3.csv("/data/caps_hard_copy.csv", function(error, csvData) {
+d3.csv("/data/caps_hard_copy.csv", function (error, csvData) {
   if (error) throw error;
 
-  data = DataFormatter.rearrangeCSVDataForZoomBubbleChart(csvData)
+  dataFormatter = new DataFormatter();
 
-  root = d3.hierarchy(data)
-      .sum(function(d) { return d.twitch_rating})
-      .sort(function(a, b) { return b.value - a.value; });
+  data = dataFormatter.rearrangeCSVDataForZoomBubbleChart(csvData);
+
+  root = d3
+    .hierarchy(data)
+    .sum(function (d) {
+      return d.twitch_rating;
+    })
+    .sort(function (a, b) {
+      return b.value - a.value;
+    });
 
   var focus = root,
-      nodes = pack(root).descendants(),
-      view;
+    nodes = pack(root).descendants(),
+    view;
 
-  populateCollectionStats(root.data)
+  populateCollectionStats(root.data);
 
-  var circle = g.selectAll("circle")
+  var circle = g
+    .selectAll("circle")
     .data(nodes)
-    .enter().append("circle")
-      .attr("class", function(d) { return d.parent ? d.children ? "node" : "leaf" : "node node--root"; })
-      .style("fill", function(d) { return d.children ? color(d.depth) : null; })
-      .on("click", function(d) { if (focus !== d) zoom(d), d3.event.stopPropagation(); })
+    .enter()
+    .append("circle")
+    .attr("class", function (d) {
+      return d.parent ? (d.children ? "node" : "leaf") : "node node--root";
+    })
+    .style("fill", function (d) {
+      return d.children ? color(d.depth) : null;
+    })
+    .on("click", function (d) {
+      if (focus !== d) zoom(d), d3.event.stopPropagation();
+    });
 
-    svg.selectAll(".leaf")
-    .on("mouseover", null)
-    .on("click", null)
+  svg.selectAll(".leaf").on("mouseover", null).on("click", null);
 
-    svg.selectAll('.node')
-      .on("mouseover", function(d) {
-        updateStatsForCollection(d.data)
-      });
-    
-    g.selectAll("text")
+  svg.selectAll(".node").on("mouseover", function (d) {
+    updateStatsForCollection(d.data);
+  });
+
+  g.selectAll("text")
     .data(nodes)
-    .enter().append("text")
+    .enter()
+    .append("text")
     .attr("class", "label")
-    .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
-    .style("display", function(d) { return d.parent === root ? "inline" : "none"; })
-    .text(function(d) { return d.data.name; });
+    .style("fill-opacity", function (d) {
+      return d.parent === root ? 1 : 0;
+    })
+    .style("display", function (d) {
+      return d.parent === root ? "inline" : "none";
+    })
+    .text(function (d) {
+      return d.data.name;
+    });
 
   var node = g.selectAll("circle,text");
 
-  svg
-      .style("background", color(-1))
-      .on("click", function() { zoom(root); });
+  svg.style("background", color(-1)).on("click", function () {
+    zoom(root);
+  });
 
   zoomTo([root.x, root.y, root.r * 2 + margin]);
 
   function zoom(d) {
-    var focus0 = focus; focus = d;
+    var focus0 = focus;
+    focus = d;
 
-    var transition = d3.transition()
-        .duration(d3.event.altKey ? 7500 : 750)
-        .tween("zoom", function(d) {
-          var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
-          return function(t) { zoomTo(i(t)); };
-        });
-
-    transition.selectAll("text")
-      .filter(function(d) { return d.parent === focus || this.style.display === "inline"; })
-        .style("fill-opacity", function(d) { return d.parent === focus ? 1 : 0; })
-        .on("start", function(d) { if (d.parent === focus) this.style.display = "inline"; })
-        .on("end", function(d) { if (d.parent !== focus) this.style.display = "none"; });
-
-    
-    if (d.depth === BOTTOM_OF_TREE_DEPTH) {
-      svg.selectAll(".leaf")
-      .on("mouseover", function(d) {
-        updateStatsForMap(d.data)
+    var transition = d3
+      .transition()
+      .duration(d3.event.altKey ? 7500 : 750)
+      .tween("zoom", function (d) {
+        var i = d3.interpolateZoom(view, [
+          focus.x,
+          focus.y,
+          focus.r * 2 + margin,
+        ]);
+        return function (t) {
+          zoomTo(i(t));
+        };
       });
-      svg.selectAll('.node')
-      .on("mouseover", null);
+
+    transition
+      .selectAll("text")
+      .filter(function (d) {
+        return d.parent === focus || this.style.display === "inline";
+      })
+      .style("fill-opacity", function (d) {
+        return d.parent === focus ? 1 : 0;
+      })
+      .on("start", function (d) {
+        if (d.parent === focus) this.style.display = "inline";
+      })
+      .on("end", function (d) {
+        if (d.parent !== focus) this.style.display = "none";
+      });
+
+    if (d.depth === BOTTOM_OF_TREE_DEPTH) {
+      svg.selectAll(".leaf").on("mouseover", function (d) {
+        updateStatsForMap(d.data);
+      });
+      svg.selectAll(".node").on("mouseover", null);
     } else {
-      svg.selectAll(".leaf")
-      .on("mouseover", null);
-      svg.selectAll('.node')
-      .on("mouseover", function(d) {
-        updateStatsForCollection(d.data)
+      svg.selectAll(".leaf").on("mouseover", null);
+      svg.selectAll(".node").on("mouseover", function (d) {
+        updateStatsForCollection(d.data);
       });
     }
   }
 
   function zoomTo(v) {
-    var k = diameter / v[2]; view = v;
-    node.attr("transform", function(d) { return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")"; });
-    circle.attr("r", function(d) { return d.r * k; });
+    var k = diameter / v[2];
+    view = v;
+    node.attr("transform", function (d) {
+      return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")";
+    });
+    circle.attr("r", function (d) {
+      return d.r * k;
+    });
   }
 
   function populateCollectionStats(collectionData) {
-
-    collectionData.children.forEach(i4g_rating_circle => {
+    collectionData.children.forEach((i4g_rating_circle) => {
       const i4gRatingCollectionStats = {
         total_twitch_ratings: 0,
         average_twitch_rating: 0,
         total_maps_capped: 0,
-        parent_name: collectionData.name
-      }
+        parent_name: collectionData.name,
+      };
 
-      i4g_rating_circle.children.forEach(map_group_circle => {
-
+      i4g_rating_circle.children.forEach((map_group_circle) => {
         const mapGroupCollectionStats = {
           total_twitch_ratings: 0,
           average_twitch_rating: 0,
           total_maps_capped: 0,
-          parent_name: i4g_rating_circle.name
-        }
+          parent_name: i4g_rating_circle.name,
+        };
 
-        map_group_circle.children.forEach(map_circle => {
-          mapGroupCollectionStats.total_twitch_ratings += parseFloat(map_circle.twitch_rating);
+        map_group_circle.children.forEach((map_circle) => {
+          mapGroupCollectionStats.total_twitch_ratings += parseFloat(
+            map_circle.twitch_rating
+          );
           mapGroupCollectionStats.total_maps_capped += 1;
-        })
+        });
 
-        mapGroupCollectionStats.average_twitch_rating = (mapGroupCollectionStats.total_twitch_ratings / mapGroupCollectionStats.total_maps_capped).toFixed(2);
+        mapGroupCollectionStats.average_twitch_rating = (
+          mapGroupCollectionStats.total_twitch_ratings /
+          mapGroupCollectionStats.total_maps_capped
+        ).toFixed(2);
         map_group_circle.collectionStats = mapGroupCollectionStats;
 
-        i4gRatingCollectionStats.total_twitch_ratings += mapGroupCollectionStats.total_twitch_ratings;
-        i4gRatingCollectionStats.total_maps_capped += mapGroupCollectionStats.total_maps_capped;
-      })
+        i4gRatingCollectionStats.total_twitch_ratings +=
+          mapGroupCollectionStats.total_twitch_ratings;
+        i4gRatingCollectionStats.total_maps_capped +=
+          mapGroupCollectionStats.total_maps_capped;
+      });
 
-      i4gRatingCollectionStats.average_twitch_rating = (i4gRatingCollectionStats.total_twitch_ratings / i4gRatingCollectionStats.total_maps_capped).toFixed(2);
+      i4gRatingCollectionStats.average_twitch_rating = (
+        i4gRatingCollectionStats.total_twitch_ratings /
+        i4gRatingCollectionStats.total_maps_capped
+      ).toFixed(2);
       i4g_rating_circle.collectionStats = i4gRatingCollectionStats;
     });
   }
 
   function updateStatsForCollection(collectionData) {
-    clearStatsDiv()
-    
+    clearStatsDiv();
+
     let div = document.querySelector(".maps");
     div.innerHTML = "";
     div.innerHTML += "<h1>Collection Set:</h1>";
@@ -157,7 +205,7 @@ d3.csv("/data/caps_hard_copy.csv", function(error, csvData) {
   }
 
   function updateStatsForMap(capData) {
-    clearStatsDiv()
+    clearStatsDiv();
     let div = document.querySelector(".maps");
     div.innerHTML = "";
     div.innerHTML += "<h1>Map:</h1>";

@@ -1,89 +1,87 @@
 .outer {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    font-family: "Montserrat", sans-serif;
-    width: 100%;
-    height: 100%;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  font-family: "Montserrat", sans-serif;
+  width: 100%;
+  height: 100%;
+}
 
 .information {
-    display: flex;
-    flex-direction: column;
-    margin-top: 50px;
-    justify-content: space-between;
-  }
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+  justify-content: space-between;
+}
 
-  .title {
-    color: blue;
-    font-size: 64px;
-    font-weight: bold;
-    opacity: 0.7;
-    margin-bottom: 20px;
-  }
+.title {
+  color: blue;
+  font-size: 64px;
+  font-weight: bold;
+  opacity: 0.7;
+  margin-bottom: 20px;
+}
 
-  
-  .maps-svg-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 40px;
-  }
-  
-  .maps-info {
-    display: flex;
-    flex-direction: column;
-    background-color: #1b1f22;
-    opacity: 0.9;
-    margin-right: 20px;
-    border-radius: 5px;
-    height: 475px;
-    align-self: center;
-    width: 235px;
+.maps-svg-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
 
-  }
-  
-  .maps {
-    margin-left: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .maps-info h1{
-    color: #CCFFCC;
-  }
-  
-  .maps-info p {
-    color: #ece6ff
-  }
-  
-  .maps-image {
-    width: 110px;
-    height: 110px;
-    align-self: center;
-    margin-top: 15px;
-    margin-bottom: 15px;
-  }
-  
-  svg {
-    opacity: 0.9;
-    border-radius: 5px;
-    height: 960px;
-    width: 960px;
-  }
+.maps-info {
+  display: flex;
+  flex-direction: column;
+  background-color: #1b1f22;
+  opacity: 0.9;
+  margin-right: 20px;
+  border-radius: 5px;
+  height: 475px;
+  align-self: center;
+  width: 235px;
+}
 
-  footer {
-    display: flex;
-  }
-  
-  .sources {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    margin-right: 15px;
-    margin-top: 20px;
-  }
+.maps {
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
 
-  .sources-header {
-    font-weight: bold;
-  }
+.maps-info h1 {
+  color: #ccffcc;
+}
+
+.maps-info p {
+  color: #ece6ff;
+}
+
+.maps-image {
+  width: 110px;
+  height: 110px;
+  align-self: center;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+svg {
+  opacity: 0.9;
+  border-radius: 5px;
+  height: 960px;
+  width: 960px;
+}
+
+footer {
+  display: flex;
+}
+
+.sources {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 15px;
+  margin-top: 20px;
+}
+
+.sources-header {
+  font-weight: bold;
+}
