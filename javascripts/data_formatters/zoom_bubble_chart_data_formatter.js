@@ -1,22 +1,21 @@
-class DataFormatter {
+class ZoomBubbleChartDataFormatter {
   rearrangeCSVDataForZoomBubbleChart = (csvData) => {
-    const dataRearrangedByI4gRating = csvData.reduce((acc, row) => {
+    const dataRearrangedByI4gRating = this.#rearrangeDataByI4gRating(csvData);
+    const children = this.#createChildRelationships(dataRearrangedByI4gRating);
+
+    return {
+      name: "Cap All Data",
+      children,
+    };
+  };
+
+  #rearrangeDataByI4gRating = (csvData) => {
+    return csvData.reduce((acc, row) => {
       const i4gDifficulty = row["i4g_difficulty"];
       const slicedMapName = row["map"].slice(7);
 
-      const loweredMapName = slicedMapName[0].toLowerCase();
+      const range = this.#determineCircleGroup(slicedMapName);
 
-      let range = "";
-
-      if (!/^[a-zA-Z]+$/.test(loweredMapName)) {
-        range = "Symbol";
-      } else if (loweredMapName < "g") {
-        range = "A-F";
-      } else if (loweredMapName < "q") {
-        range = "G-P";
-      } else {
-        range = "Q-Z";
-      }
       if (acc[i4gDifficulty]) {
         const rowWithSlicedName = {
           ...row,
@@ -34,9 +33,23 @@ class DataFormatter {
 
       return acc;
     }, {});
+  };
 
+  #determineCircleGroup = (mapName) => {
+    const lowerCaseMapStartingLetter = mapName[0].toLowerCase();
+    if (!/^[a-zA-Z]+$/.test(lowerCaseMapStartingLetter)) {
+      return "Symbol";
+    } else if (lowerCaseMapStartingLetter < "g") {
+      return "A-F";
+    } else if (lowerCaseMapStartingLetter < "q") {
+      return "G-P";
+    } else {
+      return "Q-Z";
+    }
+  };
+
+  #createChildRelationships = (dataRearrangedByI4gRating) => {
     const children = [];
-
     for (const rating in dataRearrangedByI4gRating) {
       const child = {
         name: `I4G Rating: ${rating}`,
@@ -57,12 +70,6 @@ class DataFormatter {
 
       children.push(child);
     }
-
-    const dataForD3Hierarchy = {
-      name: "Cap All Data",
-      children,
-    };
-
-    return dataForD3Hierarchy;
+    return children;
   };
 }

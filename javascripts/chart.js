@@ -22,9 +22,9 @@ var pack = d3
 d3.csv("/data/caps_hard_copy.csv", function (error, csvData) {
   if (error) throw error;
 
-  dataFormatter = new DataFormatter();
+  zoomBubbleChartDataFormatter = new ZoomBubbleChartDataFormatter();
 
-  data = dataFormatter.rearrangeCSVDataForZoomBubbleChart(csvData);
+  data = zoomBubbleChartDataFormatter.rearrangeCSVDataForZoomBubbleChart(csvData);
 
   root = d3
     .hierarchy(data)
