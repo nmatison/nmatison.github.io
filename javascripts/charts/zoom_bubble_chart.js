@@ -1,7 +1,7 @@
 const BOTTOM_OF_TREE_DEPTH = 2;
 
 var svg = d3.select("svg"),
-  margin = 20,
+  margin = 5,
   diameter = 960,
   g = svg
     .append("g")
@@ -30,7 +30,7 @@ d3.csv("/data/caps_hard_copy.csv", function (error, csvData) {
   root = d3
     .hierarchy(data)
     .sum(function (d) {
-      return d.twitch_rating;
+      return 5 + 25 * parseFloat(d.twitch_rating);
     })
     .sort(function (a, b) {
       return b.value - a.value;
