@@ -70,6 +70,25 @@ svg {
   width: 960px;
 }
 
+.fake-svg {
+  opacity: 0.9;
+  border-radius: 5px;
+  height: 960px;
+  width: 960px;
+  background-color: darkgray;
+  text-align: center;
+}
+
+.fake-svg h1 {
+  padding: 460px 0px;
+  font-weight: bolder;
+  font-size: x-large;
+}
+
+.navigation {
+  margin-left: 20px;
+}
+
 footer {
   display: flex;
 }

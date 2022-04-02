@@ -234,7 +234,7 @@ d3.csv("/data/caps_hard_copy.csv", function (error, csvData) {
   function clearStatsDiv() {
     let wholeDiv = document.querySelector(".maps-info");
     wholeDiv.innerHTML = "";
-    wholeDiv.innerHTML += `<img class="maps-image" src="./images/btlogo.bmp" alt="default-logo">`;
+    wholeDiv.innerHTML += `<img class="maps-image" src="../images/btlogo.bmp" alt="default-logo">`;
     wholeDiv.innerHTML += `<div class="maps"></div>`;
   }
 });
