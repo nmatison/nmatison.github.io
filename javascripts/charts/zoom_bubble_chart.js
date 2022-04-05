@@ -248,12 +248,6 @@ const renderZoomBubbleChart = () => {
       div.innerHTML += `<p>${capData.time_played}</p>`;
     }
 
-    function clearStatsDiv() {
-      let wholeDiv = document.querySelector(".maps-info");
-      wholeDiv.innerHTML = "";
-      wholeDiv.innerHTML += `<img class="maps-image" src="../images/btlogo.bmp" alt="default-logo">`;
-      wholeDiv.innerHTML += `<div class="maps"></div>`;
-    }
     const defaultText = document.querySelector(".svg-default-text");
 
     if (defaultText) {
