@@ -52,7 +52,11 @@ const renderZoomBubbleChart = () => {
       .enter()
       .append("circle")
       .attr("class", function (d) {
-        return d.parent ? (d.children ? "node" : "leaf") : "node node--root";
+        return d.parent
+          ? d.children
+            ? "node"
+            : "node node--leaf"
+          : "node node--root";
       })
       .style("fill", function (d) {
         return d.children ? color(d.depth) : null;
@@ -61,11 +65,18 @@ const renderZoomBubbleChart = () => {
         if (focus !== d) zoom(d), d3.event.stopPropagation();
       });
 
-    svg.selectAll(".leaf").on("mouseover", null).on("click", null);
-
     svg.selectAll(".node").on("mouseover", function (d) {
       updateStatsForCollection(d.data);
     });
+
+    svg
+      .selectAll(".node--leaf")
+      .on("click", function (d) {
+        if (focus !== d.parent) zoom(d.parent), d3.event.stopPropagation();
+      })
+      .on("mouseover", function (d) {
+        updateStatsForCollection(d.parent.data);
+      });
 
     g.selectAll("text")
       .data(nodes)
@@ -123,15 +134,19 @@ const renderZoomBubbleChart = () => {
           if (d.parent !== focus) this.style.display = "none";
         });
 
+      console.log(d);
+
       if (d.depth === BOTTOM_OF_TREE_DEPTH) {
-        svg.selectAll(".leaf").on("mouseover", function (d) {
+        svg.selectAll(".node").on("mouseover", null);
+        svg.selectAll(".node--leaf").on("mouseover", function (d) {
           updateStatsForMap(d.data);
         });
-        svg.selectAll(".node").on("mouseover", null);
       } else {
-        svg.selectAll(".leaf").on("mouseover", null);
         svg.selectAll(".node").on("mouseover", function (d) {
           updateStatsForCollection(d.data);
+        });
+        svg.selectAll(".node--leaf").on("mouseover", function (d) {
+          updateStatsForCollection(d.parent.data);
         });
       }
     }
