@@ -4,6 +4,7 @@
     <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link rel="stylesheet" type="text/css" href="/stylesheets/reset.css"></link>
     <link rel="stylesheet" type="text/css" href="/stylesheets/index.css"></link>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/node.css"></link>
     <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
     <meta charset="utf-8">
     <title>soupyEU Cap All Stats</title>
@@ -28,14 +29,19 @@
             <p>Hover over a circle to populate me with data.</p>
           </div>
         </div>
-        <section class="fake-svg">
-          <h1>Click a chart name on the right to get started!</h1>
-        </section>
-        <section class="navigation">
-          <ul>
-            <li><a href="/html/zoom_bubble_chart.html">Zoom Bubble Chart</a></li>
-          </ul>
-        </section>
+        <section>
+          <nav class="navigation">
+            <ul>
+              <li><a class="zoom-bubble-chart-item" onclick="handleChartSelectionClick(this)">Zoom Bubble Chart</a></li>
+              <li><a class="test">Zoom Bubble Chart</a></li>
+              <li><a class="test">Zoom Bubble Chart</a></li>
+              
+            </ul>
+          </nav>
+          <svg class="svg">
+            <text x="215" y="480" class="svg-default-text">Click a chart name on the top to get started!</text>
+          </svg>
+        </section> 
       </div>
       <footer>
         <div class="sources">
@@ -61,5 +67,10 @@
             >!
           </p>
         </div>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="/javascripts/data_formatters/zoom_bubble_chart_data_formatter.js"></script>
+        <script src="/javascripts/charts/zoom_bubble_chart.js"></script>
+        <script src="/javascripts/util.js"></script>
+
   </body>
 </html>
