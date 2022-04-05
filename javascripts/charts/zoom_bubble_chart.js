@@ -134,8 +134,6 @@ const renderZoomBubbleChart = () => {
           if (d.parent !== focus) this.style.display = "none";
         });
 
-      console.log(d);
-
       if (d.depth === BOTTOM_OF_TREE_DEPTH) {
         svg.selectAll(".node").on("mouseover", null);
         svg.selectAll(".node--leaf").on("mouseover", function (d) {
